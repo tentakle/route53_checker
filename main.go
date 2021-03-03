@@ -13,22 +13,18 @@ func main() {
 
 	svc := route53.New(sess)
 
-	params := &route53.ListHostedZonesInput{}
-
 	pageNum := 0
-	err := svc.ListHostedZonesPages(params,
+	err := svc.ListHostedZonesPages(&route53.ListHostedZonesInput{},
 		func(page *route53.ListHostedZonesOutput, lastPage bool) bool {
 			pageNum++
 
 			for _, zone := range page.HostedZones {
 				fmt.Printf("Hosted Zone: %v\n\n", *zone.Name)
-
-				params := &route53.ListResourceRecordSetsInput{
-					HostedZoneId: zone.Id,
-				}
-
 				pageNum := 0
-				err := svc.ListResourceRecordSetsPages(params,
+
+				err := svc.ListResourceRecordSetsPages(&route53.ListResourceRecordSetsInput{
+					HostedZoneId: zone.Id,
+				},
 					func(page *route53.ListResourceRecordSetsOutput, lastPage bool) bool {
 						pageNum++
 
