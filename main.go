@@ -2,6 +2,7 @@ package main
 
 import (
 	"crypto/tls"
+	"flag"
 	"fmt"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/route53"
@@ -9,6 +10,10 @@ import (
 )
 
 func main() {
+	wordPtr := flag.String("word", "foo", "a string")
+	flag.Parse()
+	fmt.Println("word:", *wordPtr)
+
 	sess := session.Must(session.NewSession())
 
 	svc := route53.New(sess)
