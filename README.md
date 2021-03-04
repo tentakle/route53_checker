@@ -1,4 +1,8 @@
-# route53_checker
+# Route53 Checker
+
+[![Go](https://github.com/tentakle/route53_checker/actions/workflows/go.yml/badge.svg)](https://github.com/tentakle/route53_checker/actions/workflows/go.yml)
+
+## Configure
 Auth using environment variables or shared credentials file. `~/.aws/credentials`
 ```
 [default]
