@@ -1,0 +1,32 @@
+---
+- hosts: localhost
+  connection: local
+  become: true
+
+
+  tasks:
+    - name: prometheus
+      docker_container:
+        name: prometheus
+        image: prom/prometheus
+        published_ports:
+          - 9091:9090
+        volumes:
+          - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:z
+          - ./targets.json:/etc/prometheus/targets.json:z
+
+    - name: blackbox_exporter
+      docker_container:
+        name: blackbox_exporter
+        image: prom/blackbox-exporter
+        published_ports:
+          - 9115:9115
+        volumes:
+          - ./blackbox_exporter/blackbox.yml:/config/blackbox.yml:z
+
+    - name: grafana
+      docker_container:
+        name: grafana
+        image: grafana/grafana
+        published_ports:
+          - 3000:3000
