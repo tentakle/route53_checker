@@ -3,30 +3,46 @@
   connection: local
   become: true
 
+  vars:
+    docker_network_name: cert-net
+    prometheus_port: 9091
+    blackbox_exporter_port: 9115
+    grafana_port: 3000
 
   tasks:
-    - name: prometheus
+    - name: create a network
+      docker_network:
+        name: "{{ docker_network_name }}"
+
+    - name: create prometheus
       docker_container:
         name: prometheus
         image: prom/prometheus
         published_ports:
-          - 9091:9090
+          - "{{ prometheus_port }}:9090"
         volumes:
           - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:z
           - ./targets.json:/etc/prometheus/targets.json:z
+        networks:
+          - name: "{{ docker_network_name }}"
 
-    - name: blackbox_exporter
+    - name: create blackbox_exporter
       docker_container:
         name: blackbox_exporter
         image: prom/blackbox-exporter
         published_ports:
-          - 9115:9115
+          - "{{ blackbox_exporter_port }}:9115"
         volumes:
           - ./blackbox_exporter/blackbox.yml:/config/blackbox.yml:z
+        networks:
+          - name: "{{ docker_network_name }}"
 
-    - name: grafana
+
+    - name: create grafana
       docker_container:
         name: grafana
         image: grafana/grafana
         published_ports:
-          - 3000:3000
+          - "{{ grafana_port }}:3000"
+        networks:
+          - name: "{{ docker_network_name }}"

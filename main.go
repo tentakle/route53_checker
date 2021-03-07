@@ -2,7 +2,7 @@ package main
 
 import (
 	//"crypto/tls"
-	"encoding/json"
+	//"encoding/json"
 	//"flag"
 	"fmt"
 	//"github.com/aws/aws-sdk-go/aws"
@@ -18,16 +18,17 @@ func main() {
 		flag.Parse()
 		fmt.Println("word:", *wordPtr)
 	*/
-	type Domains struct {
-		Targets []string `json:"targets"`
-	}
+	/*
+		type Domains struct {
+			Targets []string `json:"targets"`
+		}
 
-	arr := []Domains{
-		Domains{
-			Targets: []string{},
-		},
-	}
-
+		arr := []Domains{
+			Domains{
+				Targets: []string{},
+			},
+		}
+	*/
 	sess := session.Must(session.NewSession())
 
 	svc := route53.New(sess)
@@ -47,9 +48,15 @@ func main() {
 					func(page *route53.ListResourceRecordSetsOutput, lastPage bool) bool {
 						pageNum++
 						for _, record := range page.ResourceRecordSets {
-							if *record.Type == "A" {
-								arr[0].Targets = append(arr[0].Targets, *record.Name)
+							//fmt.Println(record)
+							if record.SetIdentifier != nil && record.Weight != nil {
+								fmt.Printf("Type: %v Name: %v TTL: %v SetIdentifier: %v Weight: %v ResourceRecords: %v\n", *record.Type, *record.Name, *record.TTL, *record.SetIdentifier, *record.Weight, record.ResourceRecords)
 							}
+							/*
+								if *record.Type == "A" {
+									arr[0].Targets = append(arr[0].Targets, *record.Name)
+								}
+							*/
 							/*
 								fmt.Println(*record.Name)
 								if *record.Type == "A" || *record.Type == "AAAA" || *record.Type == "CNAME" {
@@ -72,32 +79,28 @@ func main() {
 				if err != nil {
 					log.Println(err)
 				}
-/*
-				j, _ := json.Marshal(arr)
-				// fmt.Println(string(j))
+				/*
+					j, _ := json.Marshal(arr)
+					// fmt.Println(string(j))
 
-				f, err := os.OpenFile("targets.json", os.O_RDWR|os.O_CREATE, 0664)
-				if err != nil {
-					log.Fatal(err)
-				}
+					f, err := os.OpenFile("targets.json", os.O_RDWR|os.O_CREATE, 0664)
+					if err != nil {
+						log.Fatal(err)
+					}
 
-				if _, err := f.WriteString(string(j)); err != nil {
-					f.Close()
-					log.Fatal(err)
-				}
+					if _, err := f.WriteString(string(j)); err != nil {
+						f.Close()
+						log.Fatal(err)
+					}
 
-				if err := f.Close(); err != nil {
-					log.Fatal(err)
-				}
-*/
+					if err := f.Close(); err != nil {
+						log.Fatal(err)
+					}
+				*/
 			}
 			return *page.IsTruncated
 		})
 	if err != nil {
 		log.Println(err)
 	}
-
-	j, _ := json.Marshal(arr)
-	fmt.Println(string(j))
-
 }
