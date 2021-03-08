@@ -8,37 +8,28 @@ on:
 
 jobs:
 
-  super-lint:
-    name: Lint code base
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-      with:
-        fetch-depth: 0
-
-    - name: Run Super-Linter
-      uses: github/super-linter@v3
-      env:
-        VALIDATE_ALL_CODEBASE: false
-        VALIDATE_GO: true
-        DEFAULT_BRANCH: main
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
   build:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         os: [ ubuntu-latest, macos-latest ]
     steps:
-    - uses: actions/checkout@v2
-
     - name: Set up Go
       uses: actions/setup-go@v2
       with:
-        go-version: 1.16
+        go-version: ^1.16
+      id: go
+
+    - uses: actions/checkout@v2
 
     - name: Build
       run: go build -v ./...
 
     - name: Test
       run: go test -v ./...
+    
+    - name: Get dependencies
+      run: go install golang.org/x/exp/cmd/gorelease
+
+    - name: Check
+      run: $(go env GOPATH)/bin/gorelease
