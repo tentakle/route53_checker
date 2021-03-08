@@ -1,4 +1,4 @@
-module route53_checker
+module github.com/tentakle/route53_checker
 
 go 1.16
 
