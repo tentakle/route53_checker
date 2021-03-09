@@ -18,17 +18,16 @@ func main() {
 		flag.Parse()
 		fmt.Println("word:", *wordPtr)
 	*/
-	/*
-		type Domains struct {
-			Targets []string `json:"targets"`
-		}
+	type Domains struct {
+		Targets []string `json:"targets"`
+	}
 
-		arr := []Domains{
-			Domains{
-				Targets: []string{},
-			},
-		}
-	*/
+	arr := []Domains{
+		Domains{
+			Targets: []string{},
+		},
+	}
+
 	sess := session.Must(session.NewSession())
 
 	svc := route53.New(sess)
@@ -49,14 +48,14 @@ func main() {
 						pageNum++
 						for _, record := range page.ResourceRecordSets {
 							//fmt.Println(record)
-							if record.SetIdentifier != nil && record.Weight != nil {
-								fmt.Printf("Type: %v Name: %v TTL: %v SetIdentifier: %v Weight: %v ResourceRecords: %v\n", *record.Type, *record.Name, *record.TTL, *record.SetIdentifier, *record.Weight, record.ResourceRecords)
-							}
 							/*
-								if *record.Type == "A" {
-									arr[0].Targets = append(arr[0].Targets, *record.Name)
+								if record.SetIdentifier != nil && record.Weight != nil {
+									fmt.Printf("Type: %v Name: %v TTL: %v SetIdentifier: %v Weight: %v ResourceRecords: %v\n", *record.Type, *record.Name, *record.TTL, *record.SetIdentifier, *record.Weight, record.ResourceRecords)
 								}
 							*/
+							if *record.Type == "A" {
+								arr[0].Targets = append(arr[0].Targets, *record.Name)
+							}
 							/*
 								fmt.Println(*record.Name)
 								if *record.Type == "A" || *record.Type == "AAAA" || *record.Type == "CNAME" {
@@ -79,6 +78,7 @@ func main() {
 				if err != nil {
 					log.Println(err)
 				}
+
 				/*
 					j, _ := json.Marshal(arr)
 					// fmt.Println(string(j))
@@ -103,4 +103,5 @@ func main() {
 	if err != nil {
 		log.Println(err)
 	}
+	fmt.Println(arr)
 }
