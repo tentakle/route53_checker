@@ -28,7 +28,7 @@ jobs:
           ${{ runner.os }}-go-
           
     - name: Lint
-      if: matrix.os != 'windows-latest'
+      if: ${{ matrix.os != 'windows-latest' }}
       uses: golangci/golangci-lint-action@v2
           
     - name: Build
