@@ -19,6 +19,10 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
       
+    - name: Lint
+      if: ${{ matrix.os != 'windows-latest' }}
+      uses: golangci/golangci-lint-action@v2
+      
     - name: Cache
       uses: actions/cache@v2
       with:
@@ -26,11 +30,7 @@ jobs:
         key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
         restore-keys: |
           ${{ runner.os }}-go-
-          
-    - name: Lint
-      if: ${{ matrix.os != 'windows-latest' }}
-      uses: golangci/golangci-lint-action@v2
-          
+
     - name: Build
       run: go build -v ./...
 
