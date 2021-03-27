@@ -1,6 +1,5 @@
 # Route53 Checker
 
-[![Lint](https://github.com/tentakle/route53_checker/actions/workflows/lint.yml/badge.svg)](https://github.com/tentakle/route53_checker/actions/workflows/lint.yml)
 [![Test](https://github.com/tentakle/route53_checker/actions/workflows/test.yml/badge.svg)](https://github.com/tentakle/route53_checker/actions/workflows/test.yml)
 [![Release](https://github.com/tentakle/route53_checker/actions/workflows/release.yml/badge.svg)](https://github.com/tentakle/route53_checker/actions/workflows/release.yml)
 
