@@ -21,7 +21,7 @@ jobs:
       
     - name: Lint
       if: ${{ matrix.os != 'windows-latest' }}
-      uses: golangci/golangci-lint-action@v2
+      uses: golangci/golangci-lint-action@v2.5.2
       
     - name: Cache
       uses: actions/cache@v2.1.4
